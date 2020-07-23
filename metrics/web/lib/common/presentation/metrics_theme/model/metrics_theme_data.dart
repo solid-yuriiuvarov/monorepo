@@ -6,6 +6,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_th
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_data/sparkline_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 
@@ -44,6 +45,9 @@ class MetricsThemeData {
   /// The theme for the text fields.
   final TextFieldThemeData textFieldTheme;
 
+  /// The theme data for sparkline graph widgets.
+  final SparklineThemeData sparklineTheme;
+
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
     MetricCirclePercentageThemeData metricCirclePercentageThemeData,
@@ -55,6 +59,7 @@ class MetricsThemeData {
     ProjectGroupCardThemeData addProjectGroupCardTheme,
     MetricsButtonThemeData metricsButtonTheme,
     TextFieldThemeData textFieldTheme,
+    SparklineThemeData sparklineTheme,
   })  : metricCirclePercentageThemeData = metricCirclePercentageThemeData ??
             const MetricCirclePercentageThemeData(),
         inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
@@ -73,7 +78,8 @@ class MetricsThemeData {
             addProjectGroupCardTheme ?? const ProjectGroupCardThemeData(),
         metricsButtonTheme =
             metricsButtonTheme ?? const MetricsButtonThemeData(),
-        textFieldTheme = textFieldTheme ?? const TextFieldThemeData();
+        textFieldTheme = textFieldTheme ?? const TextFieldThemeData(),
+        sparklineTheme = sparklineTheme ?? const SparklineThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
   ///
@@ -89,6 +95,7 @@ class MetricsThemeData {
     MetricWidgetThemeData inactiveWidgetTheme,
     MetricsButtonThemeData metricsButtonTheme,
     TextFieldThemeData textFieldTheme,
+    SparklineThemeData sparklineTheme,
   }) {
     return MetricsThemeData(
       metricCirclePercentageThemeData: metricCirclePercentageThemeData ??
@@ -104,6 +111,7 @@ class MetricsThemeData {
       inactiveWidgetTheme: inactiveWidgetTheme ?? this.inactiveWidgetTheme,
       metricsButtonTheme: metricsButtonTheme ?? this.metricsButtonTheme,
       textFieldTheme: textFieldTheme ?? this.textFieldTheme,
+      sparklineTheme: sparklineTheme ?? this.sparklineTheme,
     );
   }
 }
