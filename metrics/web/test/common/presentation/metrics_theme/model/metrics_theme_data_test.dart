@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/button/theme/attention_level/metrics_button_attention_level.dart';
+import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
+import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
-import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_item_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
-import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_item_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_metrics_tile_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 import 'package:test/test.dart';
 
@@ -31,6 +32,7 @@ void main() {
         expect(themeData.textFieldTheme, isNotNull);
         expect(themeData.projectGroupDropdownTheme, isNotNull);
         expect(themeData.projectGroupDropdownItemTheme, isNotNull);
+        expect(themeData.projectMetricsTileTheme, isNotNull);
       },
     );
 
@@ -62,6 +64,7 @@ void main() {
         expect(themeData.textFieldTheme, isNotNull);
         expect(themeData.projectGroupDropdownTheme, isNotNull);
         expect(themeData.projectGroupDropdownItemTheme, isNotNull);
+        expect(themeData.projectMetricsTileTheme, isNotNull);
       },
     );
 
@@ -119,7 +122,12 @@ void main() {
         );
 
         const projectGroupDropdownItemTheme =
-            ProjectGroupsDropdownItemThemeData(backgroundColor: backgroundColor);
+            ProjectGroupsDropdownItemThemeData(
+                backgroundColor: backgroundColor);
+
+        const projectMetricsTileTheme = ProjectMetricsTileThemeData(
+          backgroundColor: Colors.red,
+        );
 
         const themeData = MetricsThemeData();
 
@@ -135,6 +143,7 @@ void main() {
           textFieldTheme: textFieldTheme,
           projectGroupDropdownTheme: projectGroupDropdownTheme,
           projectGroupDropdownItemTheme: projectGroupDropdownItemTheme,
+          projectMetricsTileTheme: projectMetricsTileTheme,
         );
 
         expect(
@@ -165,6 +174,10 @@ void main() {
         expect(
           copiedTheme.projectGroupDropdownItemTheme,
           equals(projectGroupDropdownItemTheme),
+        );
+        expect(
+          copiedTheme.projectMetricsTileTheme,
+          equals(projectMetricsTileTheme),
         );
       },
     );
@@ -211,11 +224,15 @@ void main() {
         expect(themeData.textFieldTheme, equals(themeData.textFieldTheme));
         expect(
           themeData.projectGroupDropdownTheme,
-          copiedTheme.projectGroupDropdownTheme,
+          equals(copiedTheme.projectGroupDropdownTheme),
         );
         expect(
           themeData.projectGroupDropdownItemTheme,
-          copiedTheme.projectGroupDropdownItemTheme,
+          equals(copiedTheme.projectGroupDropdownItemTheme),
+        );
+        expect(
+          themeData.projectMetricsTileTheme,
+          equals(copiedTheme.projectMetricsTileTheme),
         );
       },
     );

@@ -10,19 +10,21 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_p
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_metrics_tile_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 
 /// Stores the theme data for dark metrics theme.
 class DarkMetricsThemeData extends MetricsThemeData {
-  static const Color dropdownBorderColor = Color(0xFF878799);
-  static const Color dropdownHoverColor = Color(0xFF1d1d20);
-  static const Color dropdownHoverBorderColor = Color(0xFF37373f);
-  static const Color focusedBorderColor = Color(0xFF878799);
+  static const Color _dropdownBorderColor = Color(0xFF878799);
+  static const Color _dropdownHoverColor = Color(0xFF1d1d20);
+  static const Color _dropdownHoverBorderColor = Color(0xFF37373f);
+  static const Color _focusedBorderColor = Color(0xFF878799);
+  static const Color _projectMetricsTileBorderColor = Color(0xFF0e0d0d);
   static const inputFocusedBorder = OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(4.0)),
-    borderSide: BorderSide(color: focusedBorderColor),
+    borderSide: BorderSide(color: _focusedBorderColor),
   );
 
   /// The default [TextStyle] for dropdown within the application.
@@ -187,8 +189,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
             backgroundColor: Colors.black,
             openedButtonBackgroundColor: Colors.black,
             hoverBackgroundColor: Colors.black,
-            hoverBorderColor: dropdownHoverBorderColor,
-            openedButtonBorderColor: dropdownBorderColor,
+            hoverBorderColor: _dropdownHoverBorderColor,
+            openedButtonBorderColor: _dropdownBorderColor,
             closedButtonBackgroundColor: ColorConfig.darkInputColor,
             closedButtonBorderColor: ColorConfig.darkInputColor,
             textStyle: _defaultDropdownTextStyle,
@@ -196,8 +198,13 @@ class DarkMetricsThemeData extends MetricsThemeData {
           projectGroupDropdownItemTheme:
               const ProjectGroupsDropdownItemThemeData(
             backgroundColor: Colors.transparent,
-            hoverColor: dropdownHoverColor,
+            hoverColor: _dropdownHoverColor,
             textStyle: _defaultDropdownTextStyle,
+          ),
+          projectMetricsTileTheme: const ProjectMetricsTileThemeData(
+            backgroundColor: ColorConfig.darkScaffoldColor,
+            borderColor: _projectMetricsTileBorderColor,
+            textStyle: TextStyle(fontSize: 24.0),
           ),
         );
 }

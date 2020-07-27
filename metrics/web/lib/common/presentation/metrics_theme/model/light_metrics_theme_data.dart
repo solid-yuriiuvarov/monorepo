@@ -10,6 +10,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_p
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_metrics_tile_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_theme_data.dart';
@@ -17,6 +18,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/project_groups_d
 /// Stores the theme data for light metrics theme.
 class LightMetricsThemeData extends MetricsThemeData {
   static const Color dropdownHoverColor = Color(0xFF1d1d20);
+  static const Color tileBorderColor = Color(0xFFE0E0E0);
   static const Color focusedBorderColor = Colors.blue;
   static const inputFocusedBorder = OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(4.0)),
@@ -180,6 +182,10 @@ class LightMetricsThemeData extends MetricsThemeData {
             backgroundColor: Colors.transparent,
             hoverColor: dropdownHoverColor,
             textStyle: TextStyle(fontSize: 16.0),
+          ),
+          projectMetricsTileTheme: const ProjectMetricsTileThemeData(
+            borderColor: tileBorderColor,
+            textStyle: TextStyle(fontSize: 22.0),
           ),
         );
 }

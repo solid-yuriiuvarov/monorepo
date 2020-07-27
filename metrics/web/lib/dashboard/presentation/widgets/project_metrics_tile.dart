@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/loading_builder.dart';
 import 'package:metrics/base/presentation/widgets/loading_placeholder.dart';
+import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
@@ -39,83 +40,79 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
   Widget build(BuildContext context) {
     super.build(context);
     final projectMetrics = widget.projectMetricsViewModel;
-    final brightness = Theme.of(context).brightness;
+    final theme = MetricsTheme.of(context).projectMetricsTileTheme;
 
     return Container(
       height: _tileHeight,
       margin: const EdgeInsets.only(bottom: 5.0),
       child: DecoratedBox(
         decoration: BoxDecoration(
+          color: theme.backgroundColor,
           borderRadius: BorderRadius.circular(2.0),
           border: Border.all(
-            color: brightness == Brightness.dark
-                ? Colors.black54
-                : Colors.grey[300],
+            color: theme.borderColor,
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: MetricsTableRow(
-            name: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                projectMetrics.projectName ?? '',
-                style: const TextStyle(fontSize: 22.0),
+        child: MetricsTableRow(
+          name: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              projectMetrics.projectName ?? '',
+              style: theme.textStyle,
+            ),
+          ),
+          buildResults: Container(
+            height: 80.0,
+            child: LoadingBuilder(
+              isLoading: projectMetrics.buildResultMetrics == null,
+              loadingPlaceholder: const LoadingPlaceholder(),
+              builder: (_) => BuildResultBarGraph(
+                buildResultMetric:
+                    widget.projectMetricsViewModel.buildResultMetrics,
               ),
             ),
-            buildResults: Container(
-              height: 80.0,
-              child: LoadingBuilder(
-                isLoading: projectMetrics.buildResultMetrics == null,
-                loadingPlaceholder: const LoadingPlaceholder(),
-                builder: (_) => BuildResultBarGraph(
-                  buildResultMetric:
-                      widget.projectMetricsViewModel.buildResultMetrics,
-                ),
+          ),
+          performance: Container(
+            height: 81.0,
+            child: LoadingBuilder(
+              isLoading: projectMetrics.performanceSparkline == null,
+              loadingPlaceholder: const LoadingPlaceholder(),
+              builder: (_) => PerformanceSparklineGraph(
+                performanceSparkline: projectMetrics.performanceSparkline,
               ),
             ),
-            performance: Container(
-              height: 81.0,
-              child: LoadingBuilder(
-                isLoading: projectMetrics.performanceSparkline == null,
-                loadingPlaceholder: const LoadingPlaceholder(),
-                builder: (_) => PerformanceSparklineGraph(
-                  performanceSparkline: projectMetrics.performanceSparkline,
-                ),
+          ),
+          buildNumber: Container(
+            height: 80.0,
+            child: LoadingBuilder(
+              isLoading: projectMetrics.buildNumberMetric == null,
+              builder: (_) {
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: BuildNumberScorecard(
+                    buildNumberMetric: projectMetrics.buildNumberMetric,
+                  ),
+                );
+              },
+            ),
+          ),
+          stability: Container(
+            height: 72.0,
+            child: LoadingBuilder(
+              isLoading: projectMetrics == null,
+              loadingPlaceholder: const LoadingPlaceholder(),
+              builder: (_) => StabilityCirclePercentage(
+                stability: projectMetrics.stability,
               ),
             ),
-            buildNumber: Container(
-              height: 80.0,
-              child: LoadingBuilder(
-                isLoading: projectMetrics.buildNumberMetric == null,
-                builder: (_) {
-                  return Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: BuildNumberScorecard(
-                      buildNumberMetric: projectMetrics.buildNumberMetric,
-                    ),
-                  );
-                },
-              ),
-            ),
-            stability: Container(
-              height: 72.0,
-              child: LoadingBuilder(
-                isLoading: projectMetrics == null,
-                loadingPlaceholder: const LoadingPlaceholder(),
-                builder: (_) => StabilityCirclePercentage(
-                  stability: projectMetrics.stability,
-                ),
-              ),
-            ),
-            coverage: Container(
-              height: 72.0,
-              child: LoadingBuilder(
-                isLoading: projectMetrics == null,
-                loadingPlaceholder: const LoadingPlaceholder(),
-                builder: (_) => CoverageCirclePercentage(
-                  coverage: projectMetrics.coverage,
-                ),
+          ),
+          coverage: Container(
+            height: 72.0,
+            child: LoadingBuilder(
+              isLoading: projectMetrics == null,
+              loadingPlaceholder: const LoadingPlaceholder(),
+              builder: (_) => CoverageCirclePercentage(
+                coverage: projectMetrics.coverage,
               ),
             ),
           ),
