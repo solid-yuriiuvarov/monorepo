@@ -72,10 +72,10 @@ void main() {
           projectMetrics: testProjectMetrics,
         ));
 
-        final projectMetricsTileContainer = tester.widget<Container>(
+        final projectMetricsTileContainer = tester.widget<DecoratedBox>(
           find.ancestor(
             of: find.byType(MetricsTableRow),
-            matching: find.byType(Container),
+            matching: find.byType(DecoratedBox),
           ),
         );
 
@@ -102,10 +102,10 @@ void main() {
           projectMetrics: testProjectMetrics,
         ));
 
-        final projectMetricsTileContainer = tester.widget<Container>(
+        final projectMetricsTileContainer = tester.widget<DecoratedBox>(
           find.ancestor(
             of: find.byType(MetricsTableRow),
-            matching: find.byType(Container),
+            matching: find.byType(DecoratedBox),
           ),
         );
 
