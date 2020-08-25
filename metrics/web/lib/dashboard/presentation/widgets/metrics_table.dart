@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
-import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
+import 'package:metrics/dashboard/presentation/widgets/metrics_table_error_placeholder.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_header.dart';
-import 'package:metrics/dashboard/presentation/widgets/no_search_results_placeholder.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_loading_placeholder.dart';
+import 'package:metrics/dashboard/presentation/widgets/no_search_results_placeholder.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -26,11 +26,7 @@ class MetricsTable extends StatelessWidget {
             Expanded(
               child: Consumer<ProjectMetricsNotifier>(
                 builder: (_, projectsMetricsNotifier, __) {
-                  if (projectsMetricsNotifier.projectsErrorMessage != null) {
-                    return _buildLoadingErrorPlaceholder(
-                      projectsMetricsNotifier.projectsErrorMessage,
-                    );
-                  }
+                  final error = projectsMetricsNotifier.projectsErrorMessage;
 
                   final projects =
                       projectsMetricsNotifier.projectsMetricsTileViewModels;
@@ -39,7 +35,11 @@ class MetricsTable extends StatelessWidget {
                     return MetricsTableLoadingPlaceholder();
                   }
 
-                  if (projects.isEmpty) {
+                  if (error != null) {
+                    return const MetricsTableErrorPlaceholder();
+                  }
+
+                  if (projects == null || projects.isEmpty) {
                     final projectNameFilter =
                         projectsMetricsNotifier.projectNameFilter;
 
@@ -73,13 +73,6 @@ class MetricsTable extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  /// Builds the loading error placeholder.
-  Widget _buildLoadingErrorPlaceholder(String errorMessage) {
-    return _DashboardTablePlaceholder(
-      text: CommonStrings.getLoadingErrorMessage(errorMessage),
     );
   }
 }

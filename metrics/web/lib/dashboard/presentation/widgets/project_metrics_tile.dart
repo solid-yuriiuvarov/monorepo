@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
-import 'package:metrics/base/presentation/widgets/loading_builder.dart';
-import 'package:metrics/base/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
@@ -15,6 +13,9 @@ import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_st
 
 /// Displays the project name and it's metrics.
 class ProjectMetricsTile extends StatefulWidget {
+  /// A height of this tile.
+  static const double height = 144.0;
+
   /// A [ProjectMetricsTileViewModel] to display.
   final ProjectMetricsTileViewModel projectMetricsViewModel;
 
@@ -33,9 +34,6 @@ class ProjectMetricsTile extends StatefulWidget {
 
 class _ProjectMetricsTileState extends State<ProjectMetricsTile>
     with AutomaticKeepAliveClientMixin {
-  /// A height of this tile.
-  static const double _tileHeight = 144.0;
-
   @override
   bool get wantKeepAlive => true;
 
@@ -48,7 +46,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
         .projectMetricsTileTheme;
 
     return DecoratedContainer(
-      height: _tileHeight,
+      height: ProjectMetricsTile.height,
       margin: const EdgeInsets.only(bottom: 4.0),
       decoration: BoxDecoration(
         color: theme.backgroundColor,
@@ -72,56 +70,35 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
           ),
           buildResults: Container(
             height: 80.0,
-            child: LoadingBuilder(
-              isLoading: projectMetrics.buildResultMetrics == null,
-              loadingPlaceholder: const LoadingPlaceholder(),
-              builder: (_) => BuildResultBarGraph(
-                buildResultMetric: projectMetrics.buildResultMetrics,
-              ),
+            child: BuildResultBarGraph(
+              buildResultMetric: projectMetrics.buildResultMetrics,
             ),
           ),
           performance: Container(
             height: 81.0,
-            child: LoadingBuilder(
-              isLoading: projectMetrics.performanceSparkline == null,
-              loadingPlaceholder: const LoadingPlaceholder(),
-              builder: (_) => PerformanceSparklineGraph(
-                performanceSparkline: projectMetrics.performanceSparkline,
-              ),
+            child: PerformanceSparklineGraph(
+              performanceSparkline: projectMetrics.performanceSparkline,
             ),
           ),
           buildNumber: Container(
             height: 80.0,
-            child: LoadingBuilder(
-              isLoading: projectMetrics.buildNumberMetric == null,
-              builder: (_) {
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: BuildNumberScorecard(
-                    buildNumberMetric: projectMetrics.buildNumberMetric,
-                  ),
-                );
-              },
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: BuildNumberScorecard(
+                buildNumberMetric: projectMetrics.buildNumberMetric,
+              ),
             ),
           ),
           stability: Container(
             height: 72.0,
-            child: LoadingBuilder(
-              isLoading: projectMetrics == null,
-              loadingPlaceholder: const LoadingPlaceholder(),
-              builder: (_) => StabilityCirclePercentage(
-                stability: projectMetrics.stability,
-              ),
+            child: StabilityCirclePercentage(
+              stability: projectMetrics.stability,
             ),
           ),
           coverage: Container(
             height: 72.0,
-            child: LoadingBuilder(
-              isLoading: projectMetrics == null,
-              loadingPlaceholder: const LoadingPlaceholder(),
-              builder: (_) => CoverageCirclePercentage(
-                coverage: projectMetrics.coverage,
-              ),
+            child: CoverageCirclePercentage(
+              coverage: projectMetrics.coverage,
             ),
           ),
         ),

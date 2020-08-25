@@ -125,14 +125,15 @@ void main() {
       "applies the text style from the metrics theme",
       (WidgetTester tester) async {
         const projectName = 'projectName';
-        const tileViewModel = ProjectMetricsTileViewModel(
-          projectName: projectName,
-        );
+        final tileViewModel =
+            testProjectMetrics.copyWith(projectName: projectName);
 
-        await tester.pumpWidget(const _ProjectMetricsTileTestbed(
-          themeData: themeData,
-          projectMetrics: tileViewModel,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectMetricsTileTestbed(
+            themeData: themeData,
+            projectMetrics: tileViewModel,
+          ));
+        });
 
         final projectNameText = tester.widget<Text>(
           find.text(projectName),
@@ -145,14 +146,14 @@ void main() {
     testWidgets(
       "displays the project name even if it is very long",
       (WidgetTester tester) async {
-        const ProjectMetricsTileViewModel metrics = ProjectMetricsTileViewModel(
-          projectName:
-              'Some very long name to display that may overflow on some screens but should be displayed properly. Also, this project name has a description that placed to the project name, but we still can display it properly with any overflows.',
-        );
+        const projectName =
+            'Some very long name to display that may overflow on some screens but should be displayed properly. Also, this project name has a description that placed to the project name, but we still can display it properly with any overflows.';
+        final tileViewModel =
+            testProjectMetrics.copyWith(projectName: projectName);
 
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _ProjectMetricsTileTestbed(
-            projectMetrics: metrics,
+          return tester.pumpWidget(_ProjectMetricsTileTestbed(
+            projectMetrics: tileViewModel,
           ));
         });
 
@@ -163,11 +164,11 @@ void main() {
     testWidgets(
       "displays the ProjectMetricsData even when the project name is null",
       (WidgetTester tester) async {
-        const metrics = ProjectMetricsTileViewModel();
+        final tileViewModel = testProjectMetrics.copyWith(projectName: null);
 
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _ProjectMetricsTileTestbed(
-            projectMetrics: metrics,
+          return tester.pumpWidget(_ProjectMetricsTileTestbed(
+            projectMetrics: tileViewModel,
           ));
         });
 

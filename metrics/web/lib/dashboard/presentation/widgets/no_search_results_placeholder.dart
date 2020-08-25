@@ -3,6 +3,7 @@ import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/text_placeholder/widgets/text_placeholder.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
+import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
 
 /// A widget that displays a placeholder, providing information
 /// that the search has no results.
@@ -17,7 +18,7 @@ class NoSearchResultsPlaceholder extends StatelessWidget {
         .projectMetricsTileTheme;
 
     return DecoratedContainer(
-      height: 144.0,
+      height: ProjectMetricsTile.height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(2.0),
         border: Border.all(color: theme.borderColor),

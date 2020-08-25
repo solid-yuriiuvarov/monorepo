@@ -10,4 +10,5 @@ class DashboardStrings {
   static const String noDataPlaceholder = "-";
   static const String perWeek = '/ week';
   static const String noSearchResults = 'No results for projects search…';
+  static const String empty = 'Empty';
 }

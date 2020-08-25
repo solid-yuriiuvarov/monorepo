@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
@@ -8,9 +7,10 @@ import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.da
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/coverage_circle_percentage.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
+import 'package:metrics/dashboard/presentation/widgets/metrics_table_error_placeholder.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_header.dart';
-import 'package:metrics/dashboard/presentation/widgets/no_search_results_placeholder.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_loading_placeholder.dart';
+import 'package:metrics/dashboard/presentation/widgets/no_search_results_placeholder.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:metrics/dashboard/presentation/widgets/stability_circle_percentage.dart';
@@ -54,7 +54,7 @@ void main() {
     );
 
     testWidgets(
-      "displays an error description, occurred during loading the metrics data",
+      "displays a metrics table placeholder if a projects error message is not null",
       (WidgetTester tester) async {
         const errorMessage = 'Unknown error';
         final metricsNotifier = ProjectMetricsNotifierMock();
@@ -68,14 +68,27 @@ void main() {
           ));
         });
 
-        await tester.pump();
+        expect(find.byType(MetricsTableErrorPlaceholder), findsOneWidget);
+      },
+    );
 
-        final loadingErrorMessage =
-            CommonStrings.getLoadingErrorMessage('$errorMessage');
+    testWidgets(
+      "displays a list of empty projects if a projects error message is not null",
+      (WidgetTester tester) async {
+        const errorMessage = 'Unknown error';
+        final metricsNotifier = ProjectMetricsNotifierMock();
+        when(metricsNotifier.isMetricsLoading).thenReturn(false);
+        when(metricsNotifier.projectsErrorMessage).thenReturn(errorMessage);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_MetricsTableTestbed(
+            metricsNotifier: metricsNotifier,
+          ));
+        });
 
         expect(
-          find.text(loadingErrorMessage),
-          findsOneWidget,
+          find.widgetWithText(ProjectMetricsTile, DashboardStrings.empty),
+          findsWidgets,
         );
       },
     );
