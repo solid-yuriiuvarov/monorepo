@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/domain/entities/remote_configuration.dart';
+import 'package:metrics/common/domain/entities/instant_config.dart';
 
 // ignore_for_file: avoid_redundant_argument_values, prefer_const_constructors
 
 void main() {
-  group("RemoteConfiguration", () {
+  group("InstantConfig", () {
     const isLoginFormEnabled = true;
     const isFpsMonitorEnabled = false;
     const isRendererDisplayEnabled = false;
@@ -13,7 +13,7 @@ void main() {
       "throws an ArgumentError if the given is login form enabled is null",
       () {
         expect(
-          () => RemoteConfiguration(
+          () => InstantConfig(
             isLoginFormEnabled: null,
             isFpsMonitorEnabled: isFpsMonitorEnabled,
             isRendererDisplayEnabled: isRendererDisplayEnabled,
@@ -27,7 +27,7 @@ void main() {
       "throws an ArgumentError if the given is fps monitor enabled is null",
       () {
         expect(
-          () => RemoteConfiguration(
+          () => InstantConfig(
             isLoginFormEnabled: isLoginFormEnabled,
             isFpsMonitorEnabled: null,
             isRendererDisplayEnabled: isRendererDisplayEnabled,
@@ -41,7 +41,7 @@ void main() {
       "throws an ArgumentError if the given is renderer display enabled is null",
       () {
         expect(
-          () => RemoteConfiguration(
+          () => InstantConfig(
             isLoginFormEnabled: isLoginFormEnabled,
             isFpsMonitorEnabled: isFpsMonitorEnabled,
             isRendererDisplayEnabled: null,
@@ -54,15 +54,15 @@ void main() {
     test(
       "creates an instance with the given parameters",
       () {
-        final configuration = RemoteConfiguration(
+        final config = InstantConfig(
           isLoginFormEnabled: isLoginFormEnabled,
           isFpsMonitorEnabled: isFpsMonitorEnabled,
           isRendererDisplayEnabled: isRendererDisplayEnabled,
         );
 
-        expect(configuration.isLoginFormEnabled, equals(isLoginFormEnabled));
-        expect(configuration.isFpsMonitorEnabled, equals(isFpsMonitorEnabled));
-        expect(configuration.isRendererDisplayEnabled,
+        expect(config.isLoginFormEnabled, equals(isLoginFormEnabled));
+        expect(config.isFpsMonitorEnabled, equals(isFpsMonitorEnabled));
+        expect(config.isRendererDisplayEnabled,
             equals(isRendererDisplayEnabled));
       },
     );

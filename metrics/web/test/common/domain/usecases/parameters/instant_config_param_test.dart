@@ -1,4 +1,4 @@
-import 'package:metrics/common/domain/usecases/parameters/remote_configuration_param.dart';
+import 'package:metrics/common/domain/usecases/parameters/instant_config_param.dart';
 import 'package:test/test.dart';
 
 import '../../../../test_utils/matcher_util.dart';
@@ -6,7 +6,7 @@ import '../../../../test_utils/matcher_util.dart';
 // ignore_for_file: prefer_const_constructors
 
 void main() {
-  group("RemoteConfigurationParam", () {
+  group("InstantConfigParam", () {
     const isFpsMonitorEnabled = true;
     const isLoginFormEnabled = false;
     const isRendererDisplayEnabled = false;
@@ -15,7 +15,7 @@ void main() {
       "throws an AssertionError if the given is fps monitor enabled is null",
       () {
         expect(
-          () => RemoteConfigurationParam(
+          () => InstantConfigParam(
             isFpsMonitorEnabled: null,
             isLoginFormEnabled: isLoginFormEnabled,
             isRendererDisplayEnabled: isRendererDisplayEnabled,
@@ -29,7 +29,7 @@ void main() {
       "throws an AssertionError if the given is login form Enabled is null",
       () {
         expect(
-          () => RemoteConfigurationParam(
+          () => InstantConfigParam(
             isFpsMonitorEnabled: isFpsMonitorEnabled,
             isLoginFormEnabled: null,
             isRendererDisplayEnabled: isRendererDisplayEnabled,
@@ -43,7 +43,7 @@ void main() {
       "throws an AssertionError if the given is renderer display enabled is null",
       () {
         expect(
-          () => RemoteConfigurationParam(
+          () => InstantConfigParam(
             isFpsMonitorEnabled: isFpsMonitorEnabled,
             isLoginFormEnabled: isLoginFormEnabled,
             isRendererDisplayEnabled: null,
@@ -56,7 +56,7 @@ void main() {
     test(
       "creates an instance with the given values",
       () {
-        final param = RemoteConfigurationParam(
+        final param = InstantConfigParam(
           isFpsMonitorEnabled: isFpsMonitorEnabled,
           isLoginFormEnabled: isLoginFormEnabled,
           isRendererDisplayEnabled: isRendererDisplayEnabled,

@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-/// Represents the remote configuration parameter.
-class RemoteConfigurationParam extends Equatable {
+/// Represents the instant config parameter.
+class InstantConfigParam extends Equatable {
   /// Indicates whether to show the login form.
   final bool isLoginFormEnabled;
 
@@ -19,13 +19,13 @@ class RemoteConfigurationParam extends Equatable {
         isRendererDisplayEnabled,
       ];
 
-  /// Creates a new instance of the [RemoteConfigurationParam]
+  /// Creates a new instance of the [InstantConfigParam]
   /// with the given [isLoginFormEnabled], [isFpsMonitorEnabled],
   /// and [isRendererDisplayEnabled].
   ///
   /// Throws an [AssertionError] if either [isLoginFormEnabled],
   /// [isFpsMonitorEnabled] or [isRendererDisplayEnabled] is null.
-  const RemoteConfigurationParam({
+  const InstantConfigParam({
     @required this.isLoginFormEnabled,
     @required this.isFpsMonitorEnabled,
     @required this.isRendererDisplayEnabled,
