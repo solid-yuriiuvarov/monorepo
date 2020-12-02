@@ -21,11 +21,15 @@ class FetchInstantConfigUseCase
   }
 
   @override
-  FutureOr<InstantConfig> call(InstantConfigParam params) {
-   return _repository.fetch(
-     isLoginFormEnabled: params.isLoginFormEnabled,
-     isFpsMonitorEnabled: params.isFpsMonitorEnabled,
-     isRendererDisplayEnabled: params.isRendererDisplayEnabled,
-   );
+  FutureOr<InstantConfig> call(InstantConfigParam params) async {
+    try {
+      return _repository.fetch();
+    } catch (e) {
+      return InstantConfig(
+        isLoginFormEnabled: params.isLoginFormEnabled,
+        isFpsMonitorEnabled: params.isFpsMonitorEnabled,
+        isRendererDisplayEnabled: params.isRendererDisplayEnabled,
+      );
+    }
   }
 }

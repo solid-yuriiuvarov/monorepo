@@ -41,14 +41,26 @@ void main() {
 
     test(
       ".call() uses the fetch method of the instant config repository",
-      () async {
-        await useCase(param);
+      () {
+        useCase(param);
 
-        verify(repository.fetch(
-          isFpsMonitorEnabled: isFpsMonitorEnabled,
-          isLoginFormEnabled: isLoginFormEnabled,
-          isRendererDisplayEnabled: isRendererDisplayEnabled,
-        )).called(1);
+        verify(repository.fetch()).called(1);
+      },
+    );
+
+    test(
+      ".call() returns an instant config with the given param values if fetching instant config fails",
+      () async {
+        when(repository.fetch()).thenThrow(Exception());
+
+        final config = await useCase(param);
+
+        expect(config.isLoginFormEnabled, equals(param.isLoginFormEnabled));
+        expect(config.isFpsMonitorEnabled, equals(param.isFpsMonitorEnabled));
+        expect(
+          config.isRendererDisplayEnabled,
+          equals(param.isRendererDisplayEnabled),
+        );
       },
     );
   });
