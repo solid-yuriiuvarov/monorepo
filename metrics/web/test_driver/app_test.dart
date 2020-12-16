@@ -1,159 +1,157 @@
-// This is a Flutter Web Driver test
-// https://github.com/flutter/flutter/pull/45951
-
 import 'dart:io';
 
-import 'package:flutter_driver/flutter_driver.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
+import 'package:metrics/auth/presentation/widgets/auth_form.dart';
+import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
-import 'package:test/test.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
+import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
+import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
+import 'package:metrics/dashboard/presentation/widgets/projects_search_input.dart';
+import 'package:metrics/main.dart';
 
 import 'arguments/model/user_credentials.dart';
 
 void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  group("LoginPage", () {
+    testWidgets("shows an authentication form", (WidgetTester tester) async {
+      await _pumpApp(tester);
+
+      await _authFormExists(tester);
+    });
+
+    testWidgets("can authenticate in the app using an email and a password",
+        (WidgetTester tester) async {
+      await _pumpApp(tester);
+
+      await _login(tester);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(DashboardPage), findsOneWidget);
+    });
+
+    testWidgets("can log out from the app", (WidgetTester tester) async {
+      await _pumpApp(tester);
+
+      await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text(CommonStrings.logOut));
+      await tester.pumpAndSettle();
+
+      await _authFormExists(tester);
+    });
+  });
+
   group(
-    "Flutter driver test",
+    "DashboardPage",
     () {
-      FlutterDriver driver;
+      testWidgets("loads and shows the projects", (WidgetTester tester) async {
+        await _pumpApp(tester);
 
-      setUpAll(() async {
-        driver = await WebFlutterDriver.connectWeb();
+        await _login(tester);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(ProjectMetricsTile), findsWidgets);
       });
 
-      tearDownAll(() async {
-        await driver?.close();
+      testWidgets(
+        "loads and displays coverage metric",
+        (WidgetTester tester) async {
+          await _pumpApp(tester);
+
+          expect(find.text(DashboardStrings.coverage), findsWidgets);
+          expect(find.byType(CirclePercentage), findsWidgets);
+        },
+      );
+
+      testWidgets(
+        "loads and displays the performance metric",
+        (WidgetTester tester) async {
+          await _pumpApp(tester);
+
+          expect(find.text(DashboardStrings.performance), findsWidgets);
+          expect(find.byType(PerformanceSparklineGraph), findsWidgets);
+        },
+      );
+
+      testWidgets(
+        "loads and shows the build number metric",
+        (WidgetTester tester) async {
+          await _pumpApp(tester);
+
+          expect(find.text(DashboardStrings.builds), findsWidgets);
+          expect(find.byType(BuildNumberScorecard), findsWidgets);
+        },
+      );
+
+      testWidgets(
+        "loads and shows the build result metrics",
+        (WidgetTester tester) async {
+          await _pumpApp(tester);
+
+          expect(find.byType(BuildResultBarGraph), findsWidgets);
+        },
+      );
+
+      testWidgets("shows a search project input", (WidgetTester tester) async {
+        await _pumpApp(tester);
+
+        expect(find.byType(ProjectSearchInput), findsWidgets);
       });
 
-      group("LoginPage", () {
-        test("shows an authentication form", () async {
-          await _authFormExists(driver);
-        });
+      testWidgets(
+        "project search input filters list of projects",
+        (WidgetTester tester) async {
+          await _pumpApp(tester);
 
-        test("can authenticate in the app using an email and a password",
-            () async {
-          await _authFormExists(driver);
-          await _login(driver);
-          await _authFormAbsent(driver);
-          await driver.waitFor(find.byType('DashboardPage'));
-        });
+          final noProjectsTextFinder =
+              find.text(DashboardStrings.noConfiguredProjects);
+          final searchInputFinder = find.byType(ProjectSearchInput);
+          final noSearchResultsTextFinder =
+              find.text(DashboardStrings.noSearchResults);
 
-        test("can log out from the app", () async {
-          await driver.waitUntilNoTransientCallbacks(
-              timeout: const Duration(seconds: 2));
-          await driver.tap(find.byTooltip(CommonStrings.openUserMenu));
-          await driver.waitFor(find.text(CommonStrings.logOut));
-          await driver.tap(find.text(CommonStrings.logOut));
-          await driver.waitUntilNoTransientCallbacks(
-              timeout: const Duration(seconds: 2));
-          await _authFormExists(driver);
-        });
-      });
+          expect(noProjectsTextFinder, findsNothing);
 
-      group("DashboardPage", () {
-        setUpAll(() async {
-          await _authFormExists(driver);
-          await _login(driver);
-          await _authFormAbsent(driver);
-        });
-
-        test(
-          "loads and shows the projects",
-          () async {
-            await driver.waitFor(find.byType('ProjectMetricsTile'));
-          },
-        );
-
-        test(
-          "loads and displays coverage metric",
-          () async {
-            await driver.waitFor(find.text(DashboardStrings.coverage));
-            await driver.waitFor(find.byType('CirclePercentage'));
-          },
-        );
-
-        test(
-          "loads and displays the performance metric",
-          () async {
-            await driver.waitFor(find.text(DashboardStrings.performance));
-
-            await driver.waitFor(find.byType('PerformanceSparklineGraph'));
-          },
-        );
-
-        test(
-          "loads and shows the build number metric",
-          () async {
-            await driver.waitFor(find.text(DashboardStrings.builds));
-
-            await driver.waitFor(find.byType('BuildNumberScorecard'));
-          },
-        );
-
-        test(
-          "loads and shows the build result metrics",
-          () async {
-            await driver.waitFor(find.byType('BuildResultBarGraph'));
-          },
-        );
-
-        test("shows a search project input", () async {
-          await driver.waitFor(find.byType('ProjectSearchInput'));
-        });
-
-        test("project search input filters list of projects", () async {
-          await driver.waitForAbsent(
-            find.text(DashboardStrings.noConfiguredProjects),
+          await tester.enterText(
+            searchInputFinder,
+            '_test_filters_project_name_',
           );
+          await tester.pumpAndSettle();
 
-          await driver.tap(find.byType('ProjectSearchInput'));
-          await driver.enterText('_test_filters_project_name_');
-
-          await driver.waitFor(
-            find.byType('NoSearchResultsPlaceholder'),
-          );
-          await driver.waitFor(
-            find.text(DashboardStrings.noSearchResults),
-          );
-        });
-      });
-
-      group("ProjectGroup page", () {
-        setUpAll(() async {
-          await driver.tap(find.byTooltip(CommonStrings.openUserMenu));
-          await driver.waitFor(find.text(CommonStrings.projectGroups));
-          await driver.tap(find.text(CommonStrings.projectGroups));
-
-          await driver.waitUntilNoTransientCallbacks(
-            timeout: const Duration(seconds: 2),
-          );
-        });
-
-        test("shows add project group card button", () async {
-          await driver.tap(find.byTooltip(CommonStrings.openUserMenu));
-
-          await driver.waitFor(find.byType('AddProjectGroupCard'));
-        });
-      });
+          expect(noSearchResultsTextFinder, findsOneWidget);
+        },
+      );
     },
   );
 }
 
-Future<void> _login(FlutterDriver driver) async {
+Future<void> _login(WidgetTester tester) async {
   final environment = Platform.environment;
   final credentials = UserCredentials.fromMap(environment);
 
-  await driver.tap(find.byValueKey(AuthStrings.email));
-  await driver.enterText(credentials.email);
-  await driver.tap(find.byValueKey(AuthStrings.password));
-  await driver.enterText(credentials.password);
-  await driver.tap(find.byValueKey(AuthStrings.signIn));
+  final emailFinder = find.byKey(const Key(AuthStrings.email));
+  final passwordFinder = find.byKey(const Key(AuthStrings.password));
+  final signButtonFinder = find.byKey(const Key(AuthStrings.signIn));
+
+  await tester.enterText(emailFinder, credentials.email);
+  await tester.enterText(passwordFinder, credentials.password);
+  await tester.tap(signButtonFinder);
 }
 
-Future<void> _authFormExists(FlutterDriver driver) async {
-  await driver.waitFor(find.byType('AuthForm'));
+Future<void> _pumpApp(WidgetTester tester) async {
+  await tester.pumpWidget(MetricsApp());
+  await tester.pumpAndSettle();
 }
 
-Future<void> _authFormAbsent(FlutterDriver driver) async {
-  await driver.waitForAbsent(find.byType('AuthForm'));
+Future<void> _authFormExists(WidgetTester tester) async {
+  expect(find.byType(AuthForm), findsOneWidget);
 }
