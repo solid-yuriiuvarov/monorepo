@@ -1,12 +1,13 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
+import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
@@ -15,7 +16,7 @@ import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_gra
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:metrics/dashboard/presentation/widgets/projects_search_input.dart';
 import 'package:metrics/main.dart';
-
+import 'package:metrics/project_groups/presentation/widgets/add_project_group_card.dart';
 import 'arguments/model/user_credentials.dart';
 
 void main() {
@@ -41,8 +42,7 @@ void main() {
     testWidgets("can log out from the app", (WidgetTester tester) async {
       await _pumpApp(tester);
 
-      await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
-      await tester.pumpAndSettle();
+      await _openUserMenu(tester);
 
       await tester.tap(find.text(CommonStrings.logOut));
       await tester.pumpAndSettle();
@@ -132,15 +132,35 @@ void main() {
       );
     },
   );
+  group("ProjectGroup page", () {
+    testWidgets(
+      "shows add project group card button",
+      (WidgetTester tester) async {
+        await _pumpApp(tester);
+
+        await _openProjectGroupPage(tester);
+
+        expect(find.byType(AddProjectGroupCard), findsOneWidget);
+      },
+    );
+  });
 }
 
 Future<void> _login(WidgetTester tester) async {
   final environment = Platform.environment;
   final credentials = UserCredentials.fromMap(environment);
 
-  final emailFinder = find.byKey(const Key(AuthStrings.email));
-  final passwordFinder = find.byKey(const Key(AuthStrings.password));
-  final signButtonFinder = find.byKey(const Key(AuthStrings.signIn));
+  final emailFinder = find.byWidgetPredicate((widget) {
+    return widget is MetricsTextFormField && widget.hint == AuthStrings.email;
+  });
+
+  final passwordFinder = find.byWidgetPredicate((widget) {
+    return widget is MetricsTextFormField && widget.hint == AuthStrings.password;
+  });
+
+  final signButtonFinder = find.byWidgetPredicate((widget) {
+    return widget is MetricsPositiveButton && widget.label == AuthStrings.signIn;
+  });
 
   await tester.enterText(emailFinder, credentials.email);
   await tester.enterText(passwordFinder, credentials.password);
@@ -154,4 +174,16 @@ Future<void> _pumpApp(WidgetTester tester) async {
 
 Future<void> _authFormExists(WidgetTester tester) async {
   expect(find.byType(AuthForm), findsOneWidget);
+}
+
+Future<void> _openProjectGroupPage(WidgetTester tester) async {
+  await _openUserMenu(tester);
+
+  await tester.tap(find.text(CommonStrings.projectGroups));
+  await tester.pumpAndSettle();
+}
+
+Future<void> _openUserMenu(WidgetTester tester) async {
+  await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
+  await tester.pumpAndSettle();
 }
