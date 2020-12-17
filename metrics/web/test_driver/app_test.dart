@@ -114,8 +114,11 @@ void main() {
         final searchInputFinder = find.byType(ProjectSearchInput);
         final noSearchResultsTextFinder =
             find.text(DashboardStrings.noSearchResults);
+        final projectsFinder = find.byType(ProjectMetricsTile);
 
         expect(noProjectsTextFinder, findsNothing);
+        expect(noSearchResultsTextFinder, findsNothing);
+        expect(projectsFinder, findsWidgets);
 
         await tester.enterText(
           searchInputFinder,
@@ -163,7 +166,7 @@ Future<void> _login(WidgetTester tester) async {
   await tester.enterText(emailFinder, credentials.email);
   await tester.enterText(passwordFinder, credentials.password);
   await tester.tap(signButtonFinder);
-  
+  await tester.pumpAndSettle();
 }
 
 Future<void> _pumpApp(WidgetTester tester) async {
