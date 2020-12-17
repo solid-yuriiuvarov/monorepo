@@ -26,7 +26,7 @@ void main() {
     testWidgets("shows an authentication form", (WidgetTester tester) async {
       await _pumpApp(tester);
 
-      await _authFormExists(tester);
+      expect(find.byType(AuthForm), findsOneWidget);
     });
 
     testWidgets("can authenticate in the app using an email and a password",
@@ -34,7 +34,6 @@ void main() {
       await _pumpApp(tester);
 
       await _login(tester);
-      await tester.pumpAndSettle();
 
       expect(find.byType(DashboardPage), findsOneWidget);
     });
@@ -47,91 +46,88 @@ void main() {
       await tester.tap(find.text(CommonStrings.logOut));
       await tester.pumpAndSettle();
 
-      await _authFormExists(tester);
+      expect(find.byType(AuthForm), findsOneWidget);
     });
   });
 
-  group(
-    "DashboardPage",
-    () {
-      testWidgets("loads and shows the projects", (WidgetTester tester) async {
+  group("DashboardPage", () {
+    testWidgets("loads and shows the projects", (WidgetTester tester) async {
+      await _pumpApp(tester);
+
+      await _login(tester);
+
+      expect(find.byType(ProjectMetricsTile), findsWidgets);
+    });
+
+    testWidgets(
+      "loads and displays coverage metric",
+      (WidgetTester tester) async {
         await _pumpApp(tester);
 
-        await _login(tester);
+        expect(find.text(DashboardStrings.coverage), findsWidgets);
+        expect(find.byType(CirclePercentage), findsWidgets);
+      },
+    );
+
+    testWidgets(
+      "loads and displays the performance metric",
+      (WidgetTester tester) async {
+        await _pumpApp(tester);
+
+        expect(find.text(DashboardStrings.performance), findsWidgets);
+        expect(find.byType(PerformanceSparklineGraph), findsWidgets);
+      },
+    );
+
+    testWidgets(
+      "loads and shows the build number metric",
+      (WidgetTester tester) async {
+        await _pumpApp(tester);
+
+        expect(find.text(DashboardStrings.builds), findsWidgets);
+        expect(find.byType(BuildNumberScorecard), findsWidgets);
+      },
+    );
+
+    testWidgets(
+      "loads and shows the build result metrics",
+      (WidgetTester tester) async {
+        await _pumpApp(tester);
+
+        expect(find.byType(BuildResultBarGraph), findsWidgets);
+      },
+    );
+
+    testWidgets("shows a search project input", (WidgetTester tester) async {
+      await _pumpApp(tester);
+
+      expect(find.byType(ProjectSearchInput), findsWidgets);
+    });
+
+    testWidgets(
+      "project search input filters list of projects",
+      (WidgetTester tester) async {
+        await _pumpApp(tester);
+
+        final noProjectsTextFinder =
+            find.text(DashboardStrings.noConfiguredProjects);
+        final searchInputFinder = find.byType(ProjectSearchInput);
+        final noSearchResultsTextFinder =
+            find.text(DashboardStrings.noSearchResults);
+
+        expect(noProjectsTextFinder, findsNothing);
+
+        await tester.enterText(
+          searchInputFinder,
+          '_test_filters_project_name_',
+        );
         await tester.pumpAndSettle();
 
-        expect(find.byType(ProjectMetricsTile), findsWidgets);
-      });
+        expect(noSearchResultsTextFinder, findsOneWidget);
+      },
+    );
+  });
 
-      testWidgets(
-        "loads and displays coverage metric",
-        (WidgetTester tester) async {
-          await _pumpApp(tester);
-
-          expect(find.text(DashboardStrings.coverage), findsWidgets);
-          expect(find.byType(CirclePercentage), findsWidgets);
-        },
-      );
-
-      testWidgets(
-        "loads and displays the performance metric",
-        (WidgetTester tester) async {
-          await _pumpApp(tester);
-
-          expect(find.text(DashboardStrings.performance), findsWidgets);
-          expect(find.byType(PerformanceSparklineGraph), findsWidgets);
-        },
-      );
-
-      testWidgets(
-        "loads and shows the build number metric",
-        (WidgetTester tester) async {
-          await _pumpApp(tester);
-
-          expect(find.text(DashboardStrings.builds), findsWidgets);
-          expect(find.byType(BuildNumberScorecard), findsWidgets);
-        },
-      );
-
-      testWidgets(
-        "loads and shows the build result metrics",
-        (WidgetTester tester) async {
-          await _pumpApp(tester);
-
-          expect(find.byType(BuildResultBarGraph), findsWidgets);
-        },
-      );
-
-      testWidgets("shows a search project input", (WidgetTester tester) async {
-        await _pumpApp(tester);
-
-        expect(find.byType(ProjectSearchInput), findsWidgets);
-      });
-
-      testWidgets(
-        "project search input filters list of projects",
-        (WidgetTester tester) async {
-          await _pumpApp(tester);
-
-          final noProjectsTextFinder =
-              find.text(DashboardStrings.noConfiguredProjects);
-          final searchInputFinder = find.byType(ProjectSearchInput);
-          final noSearchResultsTextFinder =
-              find.text(DashboardStrings.noSearchResults);
-
-          expect(noProjectsTextFinder, findsNothing);
-
-          await tester.enterText(
-            searchInputFinder,
-            '_test_filters_project_name_',
-          );
-          await tester.pumpAndSettle();
-
-          expect(noSearchResultsTextFinder, findsOneWidget);
-        },
-      );
-    },
-  );
   group("ProjectGroup page", () {
     testWidgets(
       "shows add project group card button",
@@ -167,15 +163,12 @@ Future<void> _login(WidgetTester tester) async {
   await tester.enterText(emailFinder, credentials.email);
   await tester.enterText(passwordFinder, credentials.password);
   await tester.tap(signButtonFinder);
+  
 }
 
 Future<void> _pumpApp(WidgetTester tester) async {
   await tester.pumpWidget(MetricsApp());
   await tester.pumpAndSettle();
-}
-
-Future<void> _authFormExists(WidgetTester tester) async {
-  expect(find.byType(AuthForm), findsOneWidget);
 }
 
 Future<void> _openProjectGroupPage(WidgetTester tester) async {
