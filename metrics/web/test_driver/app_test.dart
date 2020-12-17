@@ -150,17 +150,19 @@ Future<void> _login(WidgetTester tester) async {
   final environment = Platform.environment;
   final credentials = UserCredentials.fromMap(environment);
 
-  final emailFinder = find.byWidgetPredicate((widget) {
-    return widget is MetricsTextFormField && widget.hint == AuthStrings.email;
-  });
+  final emailFinder = find.widgetWithText(
+    MetricsTextFormField,
+    AuthStrings.email,
+  );
 
-  final passwordFinder = find.byWidgetPredicate((widget) {
-    return widget is MetricsTextFormField && widget.hint == AuthStrings.password;
-  });
-
-  final signButtonFinder = find.byWidgetPredicate((widget) {
-    return widget is MetricsPositiveButton && widget.label == AuthStrings.signIn;
-  });
+  final passwordFinder = find.widgetWithText(
+    MetricsTextFormField,
+    AuthStrings.password,
+  );
+  final signButtonFinder = find.widgetWithText(
+    MetricsPositiveButton,
+    AuthStrings.signIn,
+  );
 
   await tester.enterText(emailFinder, credentials.email);
   await tester.enterText(passwordFinder, credentials.password);
